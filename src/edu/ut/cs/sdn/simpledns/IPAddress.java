@@ -1,13 +1,11 @@
 package edu.ut.cs.sdn.simpledns;
 
 class IPAddress {
-    public static final String SEPARATOR = ".";
-
-    public static int fromString(String ipAddress) {
+    public static long fromString(String ipAddress) {
         String addr = ipAddress.split("/")[0];
-        int address = 0;
-        for (String part : addr.split(IPAddress.SEPARATOR)) {
-            int val = Integer.parseInt(part);
+        long address = 0L;
+        for (String part : addr.split("\\.")) {
+            long val = Long.parseLong(part);
             address = (address << 8) | (val & 0xff);
         }
         return address;
@@ -17,15 +15,15 @@ class IPAddress {
         return Integer.parseInt(ipAddress.split("/")[1]);
     }
 
-    public static String fromInt(int ipAddress) {
-        String address = "";
+    public static String fromLong(long ipAddress) {
+        StringBuilder address = new StringBuilder();
         for (int i = 0; i < 4; ++i) {
-            String part = Integer.toString(ipAddress & 0xff);
+            String part = Long.toString(ipAddress & 0xff);
             ipAddress >>= 8;
-            address = IPAddress.SEPARATOR + part + address;
+            address.insert(0, "." + part);
         }
 
         // get rid of the extra separator at the beginning of the string
-        return address.substring(IPAddress.SEPARATOR.length());
+        return address.substring(1);
     }
 }

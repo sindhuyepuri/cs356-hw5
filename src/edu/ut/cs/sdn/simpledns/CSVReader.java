@@ -10,19 +10,24 @@ import java.util.TreeMap;
 public class CSVReader {
     public static final String DELIMETER = ",";
     // bit mask --> map(ip, loc)
-    private Map<Integer, Map<Integer, String>> map;
+    private Map<Integer, Map<Long, String>> map;
     private CSVReader() {
         map = new TreeMap<>(); // look at most specific mask first
     }
 
-    private void insert(int bits, int addr, String location) {
+    private void insert(int bits, long addr, String location) {
         if (!this.map.containsKey(bits))
             this.map.put(bits, new HashMap<>());
-        Map<Integer, String> ipMap = this.map.get(bits);
+        Map<Long, String> ipMap = this.map.get(bits);
+        addr = (addr >> bits) << bits; // zero out lower bits
         ipMap.put(addr, location);
     }
 
-    public String get(int addr) {
+    public String get(String addr) {
+        return this.get(IPAddress.fromString(addr));
+    }
+
+    public String get(long addr) {
         for (int mask : this.map.keySet()) {
             addr = (addr >> mask) << mask; // zero out lower bits
             if (this.map.get(mask).containsKey(addr))
@@ -39,7 +44,7 @@ public class CSVReader {
             while ((line = br.readLine()) != null) {  
                 String[] split = line.split(CSVReader.DELIMETER);
                 String ip = split[0], location = split[1];
-                int address = IPAddress.fromString(ip);
+                long address = IPAddress.fromString(ip);
                 int bits = IPAddress.getBits(ip);
                 reader.insert(bits, address, location);
             }  
@@ -49,6 +54,6 @@ public class CSVReader {
             return null;
         }
 
-        return null;
+        return reader;
     }
 }
