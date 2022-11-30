@@ -16,7 +16,7 @@ public class SimpleDNS
 {
 	public static final int PORT = 8053;
 	public static final int ROOT_PORT = 53;
-	public static final int BUFFER_SZ = 100_000;
+	public static final int BUFFER_SZ = 65_527;
 	public static void main(String[] args)
 	{
 		Arguments arguments = Arguments.parseArguments(args);
@@ -27,16 +27,11 @@ public class SimpleDNS
 	}
 
 	private CSVReader reader;
-	private DatagramSocket root;
 	private InetAddress root_addr;
 	private SimpleDNS(String rootServerIp, CSVReader reader) {
 		this.reader = reader;
 		try {
-			// this.root = new DatagramSocket();
 			this.root_addr = InetAddress.getByName(rootServerIp);
-			// this.root.connect(root_addr, SimpleDNS.PORT);
-		// } catch (SocketException e) {
-		//	System.exit(-1);
 		} catch (UnknownHostException e) {
 			System.exit(-1);
 		}
@@ -44,9 +39,6 @@ public class SimpleDNS
 
 	private void run() {
 		try (DatagramSocket ds = new DatagramSocket(SimpleDNS.PORT)) {
-			// ds.connect(root_addr, PORT);
-			// System.out.println("***** SOCKET local socket address: " + ds.getLocalSocketAddress());
-			// System.out.println("***** SOCKET remote socket address: " + ds.getRemoteSocketAddress());
 			byte[] data = new byte[SimpleDNS.BUFFER_SZ];
 			DatagramPacket udpPacket = new DatagramPacket(data, SimpleDNS.BUFFER_SZ);
 			
@@ -72,12 +64,10 @@ public class SimpleDNS
 					case DNS.TYPE_NS:
 						udpPacket.setAddress(this.root_addr);
 						udpPacket.setPort(SimpleDNS.ROOT_PORT);
-						// udpPacket.setSocketAddress(this.root.getRemoteSocketAddress());
 						ds.send(udpPacket);
 						byte[] responseData = new byte[SimpleDNS.BUFFER_SZ];
 						DatagramPacket response = new DatagramPacket(responseData, SimpleDNS.BUFFER_SZ);
 						ds.receive(response);
-						System.out.println("******** RESPONSE: \n"+DNS.deserialize(response.getData(), response.getLength()));
 						break;
 					default:
 						// we silently ignore all other question types
