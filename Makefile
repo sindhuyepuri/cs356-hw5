@@ -1,5 +1,6 @@
 OUT=SimpleDNS.jar
-
+ROOT=a.root-servers.net
+CSV=ec2.csv
 JAVA_SRC=${wildcard src/edu/ut/cs/sdn/simpledns/*.java}
 JAVA_LIB=${wildcard src/edu/ut/cs/sdn/simpledns/packet/*.java}
 
@@ -13,3 +14,6 @@ ${OUT}: ${JAVA_SRC} ${JAVA_LIB} Makefile
 
 clean:
 	rm -rf ${BIN} ${OUT}
+
+run: 
+	java -jar ${OUT} -r ${ROOT} -e ${CSV} &

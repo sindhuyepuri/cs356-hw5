@@ -1,7 +1,9 @@
 package edu.ut.cs.sdn.simpledns;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 import edu.ut.cs.sdn.simpledns.packet.DNS;
 import edu.ut.cs.sdn.simpledns.packet.DNSQuestion;
@@ -16,52 +18,83 @@ public class SimpleDNS
 	public static final int BUFFER_SZ = 65_507;
 	public static void main(String[] args)
 	{
-		// arguments.ec2Csv;
-		// arguments.rootServerIp; 
 		Arguments arguments = Arguments.parseArguments(args);
 		if (arguments == null) return;
 
-		CSVReader reader = CSVReader.createCSVReader(arguments.ec2Csv);
+		SimpleDNS simpleDNS = new SimpleDNS(arguments.rootServerIp, CSVReader.createCSVReader(arguments.ec2Csv));
+		simpleDNS.run();
+	}
 
-		// try-with-resources to open a DatagramSocket
-		try (DatagramSocket ds = new DatagramSocket(PORT);) {
-			byte[] data = new byte[BUFFER_SZ];
-			DatagramPacket udpPacket = new DatagramPacket(data, PORT);
+	private CSVReader reader;
+	private DatagramSocket root;
+	private InetAddress root_addr;
+	private SimpleDNS(String rootServerIp, CSVReader reader) {
+		this.reader = reader;
+		try {
+			this.root = new DatagramSocket();
+			this.root_addr = InetAddress.getByName(rootServerIp);
+			this.root.connect(this.root_addr, SimpleDNS.PORT);
+		} catch (SocketException e) {
+			System.exit(-1);
+		} catch (UnknownHostException e) {
+			System.exit(-1);
+		}
+	}
+
+	private void run() {
+		System.out.println("******** RUN");
+		try (DatagramSocket ds = new DatagramSocket(SimpleDNS.PORT) ) {
+			byte[] data = new byte[SimpleDNS.BUFFER_SZ];
+			DatagramPacket udpPacket = new DatagramPacket(data, SimpleDNS.BUFFER_SZ);
 			
 			// keep checking for new packets to process
 			while (true) {
 				ds.receive(udpPacket);
-				DNS dns = DNS.deserialize(udpPacket.getData(), udpPacket.getLength());
+				System.out.println("******** RECEIVED PACKET:\n" + udpPacket);
+;				DNS dns = DNS.deserialize(udpPacket.getData(), udpPacket.getLength());
 				if (dns.isQuery() && dns.getOpcode() == DNS.OPCODE_STANDARD_QUERY) {
 					// boolean recursion = dns.isRecursionDesired();
-					for (DNSQuestion question : dns.getQuestions()) {
-						switch (question.getType()) {
-							case DNS.TYPE_A -> handleAQuery(dns, question);
-							case DNS.TYPE_AAAA -> throw new UnsupportedOperationException();
-							case DNS.TYPE_CNAME -> throw new UnsupportedOperationException();
-							case DNS.TYPE_NS -> throw new UnsupportedOperationException();
+					DNSQuestion question = dns.getQuestions().get(0);
+					switch (question.getType()) {
+						case DNS.TYPE_A:
+						case DNS.TYPE_AAAA:
+						case DNS.TYPE_CNAME:
+						case DNS.TYPE_NS:
+							// DNSResourceRecord result = handleAQuery(dns, question);
+							// forward packet
+							System.out.println("******** FORWARDING PACKET:\n" + udpPacket);
+							System.out.println("\n\n");
+							udpPacket.setSocketAddress(root.getRemoteSocketAddress());
+							udpPacket.setAddress(this.root_addr);
+							this.root.send(udpPacket);
+							// System.out.println("**** ROOT ADDRESS: " +this.root_addr.toString());
+							// System.out.println("**** ROOT SOCKET ADDRESS: " +root.getRemoteSocketAddress().toString());
 
-							// we silently ignore all other problems
-							default -> throw new UnsupportedOperationException();
-						}
+							byte[] responseData = new byte[SimpleDNS.BUFFER_SZ];
+							DatagramPacket response = new DatagramPacket(responseData, SimpleDNS.BUFFER_SZ);
+							this.root.receive(response);							
+							System.out.println("******** RECEIVED RESPONSE:\n" + response);
+							System.out.println("\n\n");
+							break;
+						// we silently ignore all other problems
+						default:
+							throw new UnsupportedOperationException();
 					}
 				} // fi : silently drop all other packets
 				
 			}
 		} catch (SocketException se) {
 			System.err.printf("error connecting to port: %s\n", se.getMessage());
-			return;
 		} catch (IOException io) {
-			System.err.println("error receiving packet - IOException");
-			return;
+			System.err.printf("error receiving packet: %s\n", io.getMessage());
 		}
-		 
 	}
 
-	private static DNSResourceRecord handleAQuery(DNS dns, DNSQuestion question) {
+	private DNSResourceRecord handleAQuery(DNS dns, DNSQuestion question) {
 		DNSResourceRecord answer = null;
 		// get IP
-		// if query is A && DNS server resolves query 
+		// if query is A && DNS server resolves query
+		
 		return answer;
 	}
 }
