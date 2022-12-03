@@ -1,0 +1,211 @@
+; <<>> DiG 9.10.6 <<>> -p 8053 @localhost A utexas.edu
+; (2 servers found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 7496
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 2, ADDITIONAL: 3
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1220
+;; QUESTION SECTION:
+;utexas.edu.                    IN      A
+
+;; ANSWER SECTION:
+utexas.edu.             600     IN      A       23.185.0.4
+
+;; AUTHORITY SECTION:
+utexas.edu.             172800  IN      NS      chisos.ots.utexas.edu.
+edu.                    172800  IN      NS      b.edu-servers.net.
+
+;; ADDITIONAL SECTION:
+chisos.ots.utexas.edu.  172800  IN      A       128.83.185.39
+b.edu-servers.net.      172800  IN      A       192.33.14.30
+
+;; Query time: 87 msec
+;; SERVER: ::1#8053(::1)
+;; WHEN: Fri Dec 02 23:22:00 CST 2022
+;; MSG SIZE  rcvd: 214
+
+; <<>> DiG 9.10.6 <<>> -p 8053 @localhost A www.pinterest.com
+; (2 servers found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 28687
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 5, AUTHORITY: 11, ADDITIONAL: 12
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+;; QUESTION SECTION:
+;www.pinterest.com.             IN      A
+
+;; ANSWER SECTION:
+www.pinterest.com.      3600    IN      CNAME   www-pinterest-com.gslb.pinterest.com.
+www-pinterest-com.gslb.pinterest.com. 300 IN CNAME 2-01-37d2-0018.cdx.cedexis.net.
+2-01-37d2-0018.cdx.cedexis.net. 300 IN  CNAME   www.pinterest.com.edgekey.net.
+www.pinterest.com.edgekey.net. 21600 IN CNAME   e6449.a.akamaiedge.net.
+e6449.a.akamaiedge.net. 20      IN      A       104.96.184.198
+
+;; AUTHORITY SECTION:
+pinterest.com.          172800  IN      NS      ns1.pinterest.com.
+com.                    172800  IN      NS      e.gtld-servers.net.
+pinterest.com.          172800  IN      NS      ns1.pinterest.com.
+com.                    172800  IN      NS      e.gtld-servers.net.
+cedexis.net.            172800  IN      NS      flipd.cedexis.net.
+net.                    172800  IN      NS      e.gtld-servers.net.
+edgekey.net.            172800  IN      NS      ns1-66.akam.net.
+net.                    172800  IN      NS      e.gtld-servers.net.
+a.akamaiedge.net.       4000    IN      NS      n7a.akamaiedge.net.
+akamaiedge.net.         172800  IN      NS      la1.akamaiedge.net.
+net.                    172800  IN      NS      e.gtld-servers.net.
+
+;; ADDITIONAL SECTION:
+ns1.pinterest.com.      172800  IN      A       108.59.161.60
+e.gtld-servers.net.     172800  IN      A       192.12.94.30
+ns1.pinterest.com.      172800  IN      A       108.59.161.60
+e.gtld-servers.net.     172800  IN      A       192.12.94.30
+flipd.cedexis.net.      172800  IN      A       69.28.180.4
+e.gtld-servers.net.     172800  IN      A       192.12.94.30
+ns1-66.akam.net.        172800  IN      A       193.108.91.66
+e.gtld-servers.net.     172800  IN      A       192.12.94.30
+n7a.akamaiedge.net.     4000    IN      A       23.63.22.187
+la1.akamaiedge.net.     172800  IN      A       184.26.161.192
+e.gtld-servers.net.     172800  IN      A       192.12.94.30
+
+;; Query time: 480 msec
+;; SERVER: ::1#8053(::1)
+;; WHEN: Fri Dec 02 23:25:18 CST 2022
+;; MSG SIZE  rcvd: 1176
+
+; <<>> DiG 9.10.6 <<>> -p 8053 @localhost CNAME www.pinterest.com
+; (2 servers found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 5055
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 2, ADDITIONAL: 3
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+;; QUESTION SECTION:
+;www.pinterest.com.             IN      CNAME
+
+;; ANSWER SECTION:
+www.pinterest.com.      3600    IN      CNAME   www-pinterest-com.gslb.pinterest.com.
+
+;; AUTHORITY SECTION:
+pinterest.com.          172800  IN      NS      ns1.pinterest.com.
+com.                    172800  IN      NS      e.gtld-servers.net.
+
+;; ADDITIONAL SECTION:
+ns1.pinterest.com.      172800  IN      A       108.59.161.60
+e.gtld-servers.net.     172800  IN      A       192.12.94.30
+
+;; Query time: 93 msec
+;; SERVER: ::1#8053(::1)
+;; WHEN: Fri Dec 02 23:25:36 CST 2022
+;; MSG SIZE  rcvd: 259
+
+; <<>> DiG 9.10.6 <<>> -p 8053 @localhost NS utexas.edu
+; (2 servers found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 44744
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 2, ADDITIONAL: 3
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1220
+;; QUESTION SECTION:
+;utexas.edu.                    IN      NS
+
+;; ANSWER SECTION:
+utexas.edu.             600     IN      NS      chisos.ots.utexas.edu.
+utexas.edu.             600     IN      NS      marianas.its.utexas.edu.
+utexas.edu.             600     IN      NS      glass.its.utexas.edu.
+
+;; AUTHORITY SECTION:
+utexas.edu.             172800  IN      NS      chisos.ots.utexas.edu.
+edu.                    172800  IN      NS      b.edu-servers.net.
+
+;; ADDITIONAL SECTION:
+chisos.ots.utexas.edu.  172800  IN      A       128.83.185.39
+b.edu-servers.net.      172800  IN      A       192.33.14.30
+
+;; Query time: 82 msec
+;; SERVER: ::1#8053(::1)
+;; WHEN: Fri Dec 02 23:25:47 CST 2022
+;; MSG SIZE  rcvd: 324
+
+; <<>> DiG 9.10.6 <<>> @localhost -p 8053 www.newsweek.com
+; (2 servers found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 20114
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 4, AUTHORITY: 6, ADDITIONAL: 3
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;www.newsweek.com.              IN      A
+
+;; ANSWER SECTION:
+www.newsweek.com.       300     IN      A       75.2.53.74
+www.newsweek.com.       300     IN      A       99.83.219.100
+www.newsweek.com.       0       IN      TXT     "GLOBAL-75.2.0.0"
+www.newsweek.com.       0       IN      TXT     "GLOBAL-99.83.128.0"
+
+;; AUTHORITY SECTION:
+newsweek.com.           172800  IN      NS      ns-1409.awsdns-48.org.
+newsweek.com.           172800  IN      NS      ns-1608.awsdns-09.co.uk.
+newsweek.com.           172800  IN      NS      ns-166.awsdns-20.com.
+newsweek.com.           172800  IN      NS      ns-804.awsdns-36.net.
+newsweek.com.           172800  IN      NS      ns-166.awsdns-20.com.
+com.                    172800  IN      NS      e.gtld-servers.net.
+
+;; ADDITIONAL SECTION:
+ns-166.awsdns-20.com.   172800  IN      A       205.251.192.166
+e.gtld-servers.net.     172800  IN      A       192.12.94.30
+
+;; Query time: 82 msec
+;; SERVER: ::1#8053(::1)
+;; WHEN: Fri Dec 02 23:26:00 CST 2022
+;; MSG SIZE  rcvd: 539
+
+
+; <<>> DiG 9.10.6 <<>> @localhost -p 8053 www.newsweek.com
+; (2 servers found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 20114
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 4, AUTHORITY: 6, ADDITIONAL: 3
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;www.newsweek.com.              IN      A
+
+;; ANSWER SECTION:
+www.newsweek.com.       300     IN      A       75.2.53.74
+www.newsweek.com.       300     IN      A       99.83.219.100
+www.newsweek.com.       0       IN      TXT     "GLOBAL-75.2.0.0"
+www.newsweek.com.       0       IN      TXT     "GLOBAL-99.83.128.0"
+
+;; AUTHORITY SECTION:
+newsweek.com.           172800  IN      NS      ns-1409.awsdns-48.org.
+newsweek.com.           172800  IN      NS      ns-1608.awsdns-09.co.uk.
+newsweek.com.           172800  IN      NS      ns-166.awsdns-20.com.
+newsweek.com.           172800  IN      NS      ns-804.awsdns-36.net.
+newsweek.com.           172800  IN      NS      ns-166.awsdns-20.com.
+com.                    172800  IN      NS      e.gtld-servers.net.
+
+;; ADDITIONAL SECTION:
+ns-166.awsdns-20.com.   172800  IN      A       205.251.192.166
+e.gtld-servers.net.     172800  IN      A       192.12.94.30
+
+;; Query time: 82 msec
+;; SERVER: ::1#8053(::1)
+;; WHEN: Fri Dec 02 23:26:00 CST 2022
+;; MSG SIZE  rcvd: 539
+
+; <<>> DiG 9.10.6 <<>> -p 8053 @localhost A www.netflix.com
+; (2 servers found)
+;; global options: +cmd
+;; connection timed out; no servers could be reached
