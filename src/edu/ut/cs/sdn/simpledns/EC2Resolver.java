@@ -21,7 +21,7 @@ public class EC2Resolver {
             this.map.put(bits, new HashMap<>());
         Map<Long, String> ipMap = this.map.get(bits);
         addr = (addr >> bits) << bits; // zero out lower bits
-        ipMap.put(addr, location);
+        ipMap.put(addr, location + "-" + IPAddress.fromLong(addr));
     }
 
     public String get(String addr) {

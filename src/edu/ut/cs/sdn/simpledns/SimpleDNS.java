@@ -100,7 +100,7 @@ public class SimpleDNS
 								String ip = rdata.toString();
 								String ec2Region = resolver.get(ip);
 								if (ec2Region == null) continue;
-								DNSRdataString string = new DNSRdataString(ec2Region + "-" + ip);
+								DNSRdataString string = new DNSRdataString(ec2Region);
 								DNSResourceRecord txt = new DNSResourceRecord(question.getName(), DNS.TYPE_TXT, new DNSRdataBytes(string.serialize()));
 								newAnswers.add(txt);
 							}
