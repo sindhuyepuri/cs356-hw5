@@ -37,13 +37,13 @@ public class CSVReaderTest {
 
     @Test
     public void testCSVParse() {
-        CSVReader reader = CSVReader.createCSVReader(CSVReaderTest.TEST_FILE);
+        EC2Resolver reader = EC2Resolver.createEC2Resolver(CSVReaderTest.TEST_FILE);
         Assert.assertNotNull("reader should not be null", reader);
     }
 
     @Test
     public void testBasicLookup() {
-        CSVReader reader = CSVReader.createCSVReader(CSVReaderTest.TEST_FILE);
+        EC2Resolver reader = EC2Resolver.createEC2Resolver(CSVReaderTest.TEST_FILE);
         Assert.assertNotNull("reader should not be null", reader);
         String read = reader.get("1.2.3.4");
         String expected = "A";
@@ -56,7 +56,7 @@ public class CSVReaderTest {
 
     @Test
     public void testLongestMatch() {
-        CSVReader reader = CSVReader.createCSVReader(CSVReaderTest.TEST_FILE);
+        EC2Resolver reader = EC2Resolver.createEC2Resolver(CSVReaderTest.TEST_FILE);
         Assert.assertNotNull("reader should not be null", reader);
         String read = reader.get("2.2.3.0");
         String expected = "B";

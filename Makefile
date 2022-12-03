@@ -15,5 +15,5 @@ ${OUT}: ${JAVA_SRC} ${JAVA_LIB} Makefile
 clean:
 	rm -rf ${BIN} ${OUT}
 
-run: 
+run: ${OUT}
 	java -jar ${OUT} -r ${ROOT} -e ${CSV} &

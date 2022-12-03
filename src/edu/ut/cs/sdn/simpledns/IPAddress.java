@@ -1,6 +1,8 @@
 package edu.ut.cs.sdn.simpledns;
 
 class IPAddress {
+    public static final int NUM_BITS = 32;
+
     public static long fromString(String ipAddress) {
         String addr = ipAddress.split("/")[0];
         long address = 0L;

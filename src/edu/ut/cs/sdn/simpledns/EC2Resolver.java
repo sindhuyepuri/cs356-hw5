@@ -7,15 +7,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class CSVReader {
+public class EC2Resolver {
     public static final String DELIMETER = ",";
     // bit mask --> map(ip, loc)
     private Map<Integer, Map<Long, String>> map;
-    private CSVReader() {
+    private EC2Resolver() {
         map = new TreeMap<>(); // look at most specific mask first
     }
 
-    private void insert(int bits, long addr, String location) {
+    private void insert(int prefix, long addr, String location) {
+        int bits = IPAddress.NUM_BITS - prefix;
         if (!this.map.containsKey(bits))
             this.map.put(bits, new HashMap<>());
         Map<Long, String> ipMap = this.map.get(bits);
@@ -36,13 +37,13 @@ public class CSVReader {
         return null;
     }
 
-    public static CSVReader createCSVReader(String csvFilename) {
-        CSVReader reader = new CSVReader();
+    public static EC2Resolver createEC2Resolver(String csvFilename) {
+        EC2Resolver reader = new EC2Resolver();
 
         try ( BufferedReader br = new BufferedReader(new FileReader(csvFilename)); ) {
             String line = null;
             while ((line = br.readLine()) != null) {  
-                String[] split = line.split(CSVReader.DELIMETER);
+                String[] split = line.split(EC2Resolver.DELIMETER);
                 String ip = split[0], location = split[1];
                 long address = IPAddress.fromString(ip);
                 int bits = IPAddress.getBits(ip);
