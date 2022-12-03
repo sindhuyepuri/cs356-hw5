@@ -73,7 +73,8 @@ public class SimpleDNS
 						DatagramPacket answer = new DatagramPacket(responseData, SimpleDNS.BUFFER_SZ);
 						ds.receive(answer);
 						if (recursion) {
-							answer = this.recursion(ds, digRequest, answer, null);
+							// answer = this.recursion(ds, digRequest, answer, null);
+							answer = this.recursion(ds, digRequest, answer);
 							if (answer == null) answer = new DatagramPacket(responseData, SimpleDNS.BUFFER_SZ);
 							DNS answerDNS = DNS.deserialize(answer.getData(), answer.getLength());
 							
@@ -82,7 +83,8 @@ public class SimpleDNS
 								rr = answerDNS.getAdditional().get(0);
 
 							// resolve a CNAME
-							answerDNS = this.resolveCNAME(ds, answerDNS, question.getType(), rr);
+							// answerDNS = this.resolveCNAME(ds, answerDNS, question.getType(), rr);
+							answerDNS = this.resolveCNAME(ds, answerDNS, question.getType());
 
 							answerDNS.setRecursionAvailable(true);
 							answer = new DatagramPacket(answerDNS.serialize(), answerDNS.getLength());
@@ -122,7 +124,7 @@ public class SimpleDNS
 	}
 	
 	private DatagramPacket sendDigReq(DatagramSocket ds, DatagramPacket digRequest) throws IOException {
-		System.out.println(digRequest.getAddress().getHostAddress());
+		// System.out.println(digRequest.getAddress().getHostAddress());
 		ds.send(digRequest);
 		// recurse on response from authority NS
 		byte[] responseData = new byte[SimpleDNS.BUFFER_SZ];
@@ -141,8 +143,8 @@ public class SimpleDNS
 		digRequest.setPort(port);
 		return this.sendDigReq(ds, digRequest);
 	}
-
-	private DatagramPacket recursion(DatagramSocket ds, DatagramPacket digRequest, DatagramPacket answer, DNSResourceRecord cookie) throws IOException {
+	private DatagramPacket recursion(DatagramSocket ds, DatagramPacket digRequest, DatagramPacket answer) throws IOException {
+	// private DatagramPacket recursion(DatagramSocket ds, DatagramPacket digRequest, DatagramPacket answer, DNSResourceRecord cookie) throws IOException {
 		DNS responseDNS = DNS.deserialize(answer.getData(), answer.getLength());
 
 		// handle base case -- we received an answer
@@ -163,17 +165,18 @@ public class SimpleDNS
 					(additional.getType() == DNS.TYPE_A  || additional.getType() == DNS.TYPE_AAAA)) {
 						InetAddress hostIP = ((DNSRdataAddress) additional.getData()).getAddress();
 						// send request to IP of authority NS
-						System.out.println("**** sending dig request to host ip");
+						// System.out.println("**** sending dig request to host ip");
 						answer = this.sendDigReq(ds, digRequest, hostIP);
-						System.out.println("***** after sending");
+						// System.out.println("***** after sending");
 
 						// if we find an answer from this NS, return, else keep looking
-						answer = this.recursion(ds, digRequest, answer, cookie);
+						// answer = this.recursion(ds, digRequest, answer, cookie);
+						answer = this.recursion(ds, digRequest, answer);
 						if (answer != null) {
 							DNS answerDNS = DNS.deserialize(answer.getData(), answer.getLength());
 							answerDNS.addAuthority(authority);
 							answerDNS.addAdditional(additional);
-							if (cookie != null) answerDNS.addAdditional(cookie);
+							// if (cookie != null) answerDNS.addAdditional(cookie);
 							answer = new DatagramPacket(answerDNS.serialize(), answerDNS.getLength());
 							return answer;
 						}
@@ -190,7 +193,7 @@ public class SimpleDNS
 			query.setOpcode(DNS.OPCODE_STANDARD_QUERY);
 			query.setQuery(true);
 			query.setAuthoritative(false);
-			if (cookie != null) query.addAdditional(cookie);
+			// if (cookie != null) query.addAdditional(cookie);
 			DatagramPacket authorityRootQuery = new DatagramPacket(query.serialize(), query.getLength());
 			DatagramPacket authorityRootAnswer = this.sendDigReq(ds, authorityRootQuery, this.root_addr, SimpleDNS.ROOT_PORT);
 			DNS authDNS = DNS.deserialize(authorityRootAnswer.getData(), authorityRootAnswer.getLength());
@@ -202,11 +205,12 @@ public class SimpleDNS
 						answer = this.sendDigReq(ds, digRequest, hostIP);
 
 						// if we find an answer from this NS, return, else keep looking
-						answer = this.recursion(ds, digRequest, answer, cookie);
+						// answer = this.recursion(ds, digRequest, answer, cookie);
+						answer = this.recursion(ds, digRequest, answer);
 						if (answer != null) {
 							DNS answerDNS = DNS.deserialize(answer.getData(), answer.getLength());
 							answerDNS.addAuthority(authority);
-							if (cookie != null) answerDNS.addAdditional(cookie);
+							// if (cookie != null) answerDNS.addAdditional(cookie);
 							answer = new DatagramPacket(answerDNS.serialize(), answerDNS.getLength());
 							return answer;
 						}
@@ -215,11 +219,12 @@ public class SimpleDNS
 			}
 		}
 
-		System.out.println("**** SOMETHING SCREWED UP --> " + responseDNS);
+		// System.out.println("**** SOMETHING SCREWED UP --> " + responseDNS);
 		return null;
 	}
+	// private DNS resolveCNAME(DatagramSocket ds, DNS dns, short type, DNSResourceRecord cookie) throws IOException {
+	private DNS resolveCNAME(DatagramSocket ds, DNS dns, short type) throws IOException {
 
-	private DNS resolveCNAME(DatagramSocket ds, DNS dns, short type, DNSResourceRecord cookie) throws IOException {
 		if (type == DNS.TYPE_CNAME) return dns;
 
 		// get the last answer for incoming DNS
@@ -237,8 +242,8 @@ public class SimpleDNS
 		request.setOpcode(DNS.OPCODE_STANDARD_QUERY);
 		request.setQuery(true);
 		request.setAuthoritative(false);
-		if (cookie != null)
-			request.addAdditional(cookie);
+		// if (cookie != null)
+		// 	request.addAdditional(cookie);
 		DatagramPacket pkt = new DatagramPacket(request.serialize(), request.getLength());
 		pkt.setAddress(this.root_addr);
 		pkt.setPort(SimpleDNS.ROOT_PORT);
@@ -250,15 +255,17 @@ public class SimpleDNS
 		DNS resp = DNS.deserialize(ans.getData(), ans.getLength());
 		// did we find an answer?
 		if (resp.getAnswers().size() == 0) {
-			ans = this.recursion(ds, pkt, ans, cookie);
+			// ans = this.recursion(ds, pkt, ans, cookie);
+			ans = this.recursion(ds, pkt, ans);
+
 			resp = DNS.deserialize(ans.getData(), ans.getLength());
 		}
 
 		resp.getAnswers().stream().forEach(dns::addAnswer);
 		resp.getAuthorities().stream().forEach(dns::addAuthority);
 		resp.getAdditional().stream().forEach(dns::addAdditional);
-
-		return this.resolveCNAME(ds, dns, type, cookie);
+		return this.resolveCNAME(ds, dns, type);
+		// return this.resolveCNAME(ds, dns, type, cookie);
 	}
 
 }
