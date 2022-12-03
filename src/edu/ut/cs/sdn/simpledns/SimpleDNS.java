@@ -124,7 +124,6 @@ public class SimpleDNS
 	}
 	
 	private DatagramPacket sendDigReq(DatagramSocket ds, DatagramPacket digRequest) throws IOException {
-		// System.out.println(digRequest.getAddress().getHostAddress());
 		ds.send(digRequest);
 		// recurse on response from authority NS
 		byte[] responseData = new byte[SimpleDNS.BUFFER_SZ];
@@ -165,9 +164,7 @@ public class SimpleDNS
 					(additional.getType() == DNS.TYPE_A  || additional.getType() == DNS.TYPE_AAAA)) {
 						InetAddress hostIP = ((DNSRdataAddress) additional.getData()).getAddress();
 						// send request to IP of authority NS
-						// System.out.println("**** sending dig request to host ip");
 						answer = this.sendDigReq(ds, digRequest, hostIP);
-						// System.out.println("***** after sending");
 
 						// if we find an answer from this NS, return, else keep looking
 						// answer = this.recursion(ds, digRequest, answer, cookie);
@@ -219,7 +216,6 @@ public class SimpleDNS
 			}
 		}
 
-		// System.out.println("**** SOMETHING SCREWED UP --> " + responseDNS);
 		return null;
 	}
 	// private DNS resolveCNAME(DatagramSocket ds, DNS dns, short type, DNSResourceRecord cookie) throws IOException {
